@@ -3,6 +3,7 @@ package com.jungle.week13.Service;
 import com.jungle.week13.DTO.ForumDTO;
 import com.jungle.week13.Entity.Forum;
 import com.jungle.week13.Repository.ForumRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ForumService {
-    @Autowired
-    private ForumRepository forumRepository;
+    private final ForumRepository forumRepository;
 
     public List<Forum> findAllForums() {
         return forumRepository.findAll();

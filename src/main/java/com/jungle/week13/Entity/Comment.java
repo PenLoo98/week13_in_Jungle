@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @Entity(name="forum_comment")
 @Data
 @ToString
@@ -34,7 +36,7 @@ public class Comment {
         if(dto.getId() != null){
             throw new IllegalArgumentException("댓글 생성 실패! 댓글의 id가 없어야 합니다.");
         }
-        if(dto.getForumId() != forum.getId()) {
+        if(dto.getForum_id() != forum.getId()) {
             throw new IllegalArgumentException("댓글 생성 실패! 게시글의 id가 잘못됐습니다.");
         }
 
@@ -49,10 +51,10 @@ public class Comment {
 
     public void patch(CommentDTO dto) {
         // 예외 발생
-        if(this.id != dto.getId()){
+        if(!Objects.equals(this.id, dto.getId())){
             throw new IllegalArgumentException("댓글 수정 실패! 잘못된 comment id가 입력되었습니다.");
         }
-        if(this.getForum().getId() != dto.getForumId()){
+        if(!Objects.equals(this.getForum().getId(), dto.getForum_id())){
             throw new IllegalArgumentException("댓글 수정 실패! 잘못된 forum id가 입력되었습니다.");
         }
 

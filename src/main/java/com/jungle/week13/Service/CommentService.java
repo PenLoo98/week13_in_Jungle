@@ -5,6 +5,7 @@ import com.jungle.week13.Entity.Comment;
 import com.jungle.week13.Entity.Forum;
 import com.jungle.week13.Repository.CommentRepository;
 import com.jungle.week13.Repository.ForumRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,24 +14,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    ForumRepository forumRepository;
+    private final CommentRepository commentRepository;
+    private final ForumRepository forumRepository;
 
     public List<CommentDTO> getComments(Long forumId) {
         // stream 사용한 방식
-        return commentRepository.findByForumId(forumId)
+        // TODO:
+//        return commentRepository.findByForumId(forumId)
+//                .stream()
+//                .map(comment -> CommentDTO.entityToDTO(comment))
+//                .collect(Collectors.toList()); // 자료형 변환: Stream -> List
+        List<CommentDTO> findList =  commentRepository.findByForumId(forumId)
                 .stream()
                 .map(comment -> CommentDTO.entityToDTO(comment))
                 .collect(Collectors.toList()); // 자료형 변환: Stream -> List
+        if(findList.isEmpty()){
+            return null;
+        }
+        return findList;
     }
 
     @Transactional
-    public CommentDTO postComment(Long forumId, CommentDTO dto) {
+    public CommentDTO postComment(Long forum_id, CommentDTO dto) {
         // 1. 게시글 조회 및 예외 발생
-        Forum forum = forumRepository.findById(forumId)
+        Forum forum = forumRepository.findById(forum_id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글 생성 실패! 대상 게시글이 없습니다."));
 
         // 2. 댓글 entity 생성
@@ -43,11 +52,16 @@ public class CommentService {
         return CommentDTO.entityToDTO(created);
     }
 
+    // TODO: forumId에서 commentId를 찾도록 수정
     @Transactional
-    public CommentDTO patchComment(Long commentId, CommentDTO dto) {
+    public CommentDTO patchComment(Long forumId, Long commentId, CommentDTO dto) {
         // 1. 댓글 조회 및 예외 발생
-        Comment target = commentRepository.findById(commentId)
-                .orElseThrow( () -> new IllegalArgumentException("댓글 수정 실패! 대상 댓글이 없습니다.") );
+//        Comment target = commentRepository.findById(commentId)
+//                .orElseThrow( () -> new IllegalArgumentException("댓글 수정 실패! 대상 댓글이 없습니다.") );
+        Comment target = commentRepository.findByForumIdAndCommentId(forumId, commentId);
+        if(target == null){
+            throw new IllegalArgumentException("댓글 수정 실패! 대상 댓글이 없습니다.");
+        }
 
         // 2. 댓글 수정
         target.patch(dto);
@@ -59,11 +73,16 @@ public class CommentService {
         return CommentDTO.entityToDTO(updated);
     }
 
+    // TODO: forumId에서 commentId를 찾도록 수정
     @Transactional
-    public CommentDTO deleteComment(Long commentId){
+    public CommentDTO deleteComment(Long forumId, Long commentId){
         // 1. 댓글 조회 및 예외 발생
-        Comment target = commentRepository.findById(commentId)
-                .orElseThrow( () -> new IllegalArgumentException("댓글 삭제 실패! 대상이 없습니다."));
+//        Comment target = commentRepository.findById(commentId)
+//                .orElseThrow( () -> new IllegalArgumentException("댓글 삭제 실패! 대상이 없습니다."));
+        Comment target = commentRepository.findByForumIdAndCommentId(forumId, commentId);
+        if(target == null){
+            throw new IllegalArgumentException("댓글 삭제 실패! 대상이 없습니다.");
+        }
 
         // 2. 댓글 삭제
         commentRepository.delete(target);

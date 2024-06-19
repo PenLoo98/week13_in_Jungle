@@ -3,6 +3,7 @@ package com.jungle.week13.Controller;
 import com.jungle.week13.DTO.ForumDTO;
 import com.jungle.week13.Entity.Forum;
 import com.jungle.week13.Service.ForumService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,24 +15,27 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/forum")
+@RequestMapping("/api")
+@RequiredArgsConstructor
 public class ForumRestController {
-    @Autowired
-    private ForumService forumService;
+    private final ForumService forumService;
 
     // GET
-    @GetMapping("")
-    public List<Forum> getForumsList() {
-        return forumService.findAllForums();
+    @GetMapping("/forum")
+    public ResponseEntity getForumsList() {
+        List<Forum> findList =  forumService.findAllForums();
+        return (findList.isEmpty()) ?
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body(findList) :
+                ResponseEntity.status(HttpStatus.OK).body(findList);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/forum/{id}")
     public Forum getForum(@PathVariable Long id) {
         return forumService.findForum(id);
     }
 
     // POST
-    @PostMapping("")
+    @PostMapping("/forum")
     public ResponseEntity<Forum> createForum(@RequestBody ForumDTO dto) {
         Forum created = forumService.create(dto);
         // 생성요청 결과에 따라 다른 응답값을 반환
@@ -41,7 +45,7 @@ public class ForumRestController {
     }
 
     // PATCH
-    @PatchMapping("/{id}")
+    @PatchMapping("/forum/{id}")
     public ResponseEntity<Forum> updateForum(@PathVariable Long id, @RequestBody ForumDTO dto) {
         Forum updated = forumService.update(id, dto);
         return (updated == null) ?
@@ -50,7 +54,7 @@ public class ForumRestController {
     }
 
     // DELETE
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/forum/{id}")
     public ResponseEntity<Forum> deleteForum(@PathVariable Long id){
         // 1. 서비스를 통해 게시글 삭제
         Forum deleted = forumService.delete(id);
@@ -58,23 +62,6 @@ public class ForumRestController {
         // 2. 삭제 결과에 따라 응답처리
         return deleted == null ?
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build() :
-                ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    // Transmission Test
-    @PostMapping("/transaction-test")
-    public ResponseEntity<List<Forum>> transactionTest
-    (@RequestBody List<ForumDTO> dtos){
-        // 1. 서비스에 dtos를 입력하여 보냄
-        List<Forum> createdList = forumService.createForums(dtos);
-
-        // 2. 돌아온 응답이 검증 후 적절한 반환하기
-        return createdList == null ?
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).build():
-                ResponseEntity.status(HttpStatus.OK).body(createdList);
-
-        // 3. 제대로된 응답일 경우 OK 응답 반환
-
-
+                ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 }

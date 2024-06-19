@@ -11,7 +11,7 @@ import lombok.ToString;
 @Data
 public class CommentDTO {
     private Long id;
-    private Long forumId;
+    private Long forum_id;
     private String nickname;
     private String body;
 

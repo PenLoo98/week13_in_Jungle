@@ -10,7 +10,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @ToString
-@Entity(name = "Forum")
+@Entity(name = "forum")
 @NoArgsConstructor
 @Data
 public class Forum {
