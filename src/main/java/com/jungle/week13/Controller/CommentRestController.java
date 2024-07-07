@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/forum/")
 @RequiredArgsConstructor
+@CrossOrigin
 public class CommentRestController {
     private final CommentService commentService;
     // 1. 댓글 조회

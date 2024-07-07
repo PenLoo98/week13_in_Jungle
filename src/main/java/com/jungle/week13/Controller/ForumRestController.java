@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ForumRestController {
     private final ForumService forumService;
 

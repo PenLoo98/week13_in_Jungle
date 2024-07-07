@@ -1,0 +1,40 @@
+{{>layouts/header}}
+
+<!--    content-->
+<div>
+    <div class="d-flex justify-content-center align-items-center" style="margin-top: 7vh">
+        <h1> 정글 글글글 </h1>
+    </div>
+    <div class="blink-image d-flex justify-content-center align-items-center">
+        <img src="/jungle_big.png" alt="Jungle Image">
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+
+        <a href="/forum/new">
+            <button class="btn btn-primary rotate-image">
+                정글쓰기
+            </button>
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">title</th>
+            <th scope="col">content</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#forumList}}
+            <tr>
+                <th>{{id}}</th>
+                <th><a href="/forum/{{id}}">{{title}}</a></th>
+                <th>{{content}}</th>
+            </tr>
+        {{/forumList}}
+        </tbody>
+    </table>
+</div>
+
+{{>layouts/footer}}

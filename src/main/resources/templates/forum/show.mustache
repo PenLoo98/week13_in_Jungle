@@ -1,0 +1,28 @@
+{{>layouts/header}}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">id</th>
+        <th scope="col">title</th>
+        <th scope="col">content</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#forum}}
+        <tr>
+            <th>{{id}}</th>
+            <th>{{title}}</th>
+            <th>{{content}}</th>
+        </tr>
+    {{/forum}}
+    </tbody>
+</table>
+<a href="/forum/{{forum.id}}/edit" class="btn btn-primary">Edit</a>
+<a href="/forum/{{forum.id}}/delete" class="btn btn-danger">Delete</a>
+<a href="/forum">Go to Forum List</a>
+
+<br/>
+{{>comments/_comments}}
+
+{{>layouts/footer}}

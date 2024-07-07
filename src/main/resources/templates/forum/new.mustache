@@ -1,0 +1,17 @@
+{{>layouts/header}}
+
+<!--    content-->
+<form class="container" action="/forum/create" method="post">
+    <div class="mb-3">
+        <label class="form-label">제목</label>
+        <input type="text" class="form-control" name="title" placeholder="제목을 입력하세요">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">내용</label>
+        <textarea class="form-control" name="content" rows="3" placeholder="내용을 입력하세요"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">제출</button>
+    <a href="/forum">Back</a>
+</form>
+
+{{>layouts/footer}}
